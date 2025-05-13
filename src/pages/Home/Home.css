@@ -76,6 +76,7 @@
     justify-content: center;
     flex-wrap: wrap;
     gap: 10px;
+    margin-bottom: 30px;
 }
 
 .button-group button {
@@ -98,16 +99,67 @@
 
 /* Natija */
 .result-section {
-    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+   
 }
 
 .result-section img {
     width: 100%;
-    max-width: 300px;
+    /* max-width: 300px; */
     border-radius: 10px;
-    margin-top: 10px;
+    /* margin-top: 10px; */
+  
+}
+.result-item{
+    position: relative;
+     padding: 1rem; 
+margin-bottom: 1.25rem; 
+text-align: center; 
+background-color: #ffffff; 
+max-width: 350px;
+width: 95%;
+margin: auto;
+margin-top: 30px;
+  box-shadow: 0 10px 10px #c9c3ff;
+  position: relative;
 }
 
+.result-content{
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.result-button{
+    padding-top: 0.5rem;
+padding-bottom: 0.5rem; 
+padding-left: 1.25rem;
+padding-right: 1.25rem; 
+margin-bottom: 1rem; 
+margin-top: 1rem;
+border: none;
+color: #ffffff; 
+background-color: #4CAF50;
+border-radius: 8px;
+}
+.result-percentage{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   position: absolute;
+   right: 30px;
+   top: 30px;
+   width: 45px;
+   height: 45px;
+   border: solid 1px #4CAF50;
+   border-radius: 50%;
+   background-color: #4CAF50;
+   color: white;
+   font-weight: 700;
+}
 /* Responsivlik */
 @media (max-width: 600px) {
     .button-group {

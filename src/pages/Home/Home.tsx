@@ -1,21 +1,30 @@
 import React, { useState, useEffect } from "react";
 import Header from "../../components/Header/Header";
 import { data } from "../../data";
-import "./Home.css"; // CSS fayl
+import "./Home.css";
+import { Link } from "react-router-dom";
 
-const Home = () => {
-    const [jins, setJins] = useState("");
-    const [yoshOraligi, setYoshOraligi] = useState("");
-    const [availableSymptoms, setAvailableSymptoms] = useState([]);
-    const [selectedSymptoms, setSelectedSymptoms] = useState([]);
-    const [result, setResult] = useState([]);
+// Ma'lumot strukturasining interfeysi
+interface KasallikItem {
+    jins: string[];
+    yoshOraligi: string[];
+    simptomlar: string[];
+    kasallik: string;
+    image: string | null;
+}
 
-    const ageOptions = ["0-12", "13-18", "19-35", "36-100"];
+const Home: React.FC = () => {
+    const [jins, setJins] = useState<string>("");
+    const [yoshOraligi, setYoshOraligi] = useState<string>("");
+    const [availableSymptoms, setAvailableSymptoms] = useState<string[]>([]);
+    const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
+    const [result, setResult] = useState<KasallikItem[]>([]);
 
-    // Jins va yosh oralig‘iga qarab simptomlarni yangilash
+    const ageOptions: string[] = ["0-12", "13-18", "19-35", "36-100"];
+
     useEffect(() => {
         if (jins && yoshOraligi) {
-            const filtered = data
+            const filtered = (data as KasallikItem[])
                 .filter((item) => item.jins.includes(jins))
                 .filter((item) => item.yoshOraligi.includes(yoshOraligi));
 
@@ -29,8 +38,7 @@ const Home = () => {
         }
     }, [jins, yoshOraligi]);
 
-    // Simptom tanlash yoki olib tashlash
-    const toggleSymptom = (symptom) => {
+    const toggleSymptom = (symptom: string) => {
         setSelectedSymptoms((prev) =>
             prev.includes(symptom)
                 ? prev.filter((s) => s !== symptom)
@@ -38,23 +46,20 @@ const Home = () => {
         );
     };
 
-    // Tashxis funksiyasi — 1 ta simptom bo‘lsa to‘liq mos, 2+ bo‘lsa 50% mos
     const handleDiagnosis = () => {
-        const filtered = data.filter(
+        const filtered = (data as KasallikItem[]).filter(
             (item) =>
                 item.jins.includes(jins) &&
                 item.yoshOraligi.includes(yoshOraligi)
         );
-    
-        let matched = [];
-    
+
+        let matched: KasallikItem[] = [];
+
         if (selectedSymptoms.length === 1) {
-            // Faqat bitta simptom tanlangan bo‘lsa: uni o‘z ichiga olgan barcha kasalliklar
             matched = filtered.filter((item) =>
                 item.simptomlar.includes(selectedSymptoms[0])
             );
         } else if (selectedSymptoms.length >= 2) {
-            // Kamida 2 ta simptom bo‘lsa: 60% yoki undan ko‘p mos bo‘lgan kasalliklar
             matched = filtered.filter((item) => {
                 const matchCount = selectedSymptoms.filter((s) =>
                     item.simptomlar.includes(s)
@@ -62,16 +67,22 @@ const Home = () => {
                 return matchCount / selectedSymptoms.length >= 0.6;
             });
         }
-    
-        // Agar hech narsa topilmasa, bitta "topilmadi" degan natija qaytariladi
+
         if (matched.length === 0) {
-            setResult([{ kasallik: "Mos keluvchi kasallik topilmadi", image: null }]);
+            setResult([
+                {
+                    kasallik: "Mos keluvchi kasallik topilmadi",
+                    image: null,
+                    jins: [],
+                    yoshOraligi: [],
+                    simptomlar: [],
+                },
+            ]);
         } else {
-            setResult(matched); // Hamma mos kasalliklar chiqariladi
+            setResult(matched);
         }
     };
-    
-    // Formani tozalash
+
     const handleReset = () => {
         setJins("");
         setYoshOraligi("");
@@ -84,7 +95,8 @@ const Home = () => {
         <div className="home-container">
             <Header />
             <h2 className="title">
-                Sizga bir nechta savollarni beraman, javobingizga qarab tashxis qo‘yaman
+                Sizga bir nechta savollarni beraman, javobingizga qarab tashxis
+                qo‘yaman
             </h2>
 
             {/* Jins tanlash */}
@@ -161,14 +173,12 @@ const Home = () => {
             )}
 
             {/* Natijalar */}
-            {result.length > 0 && (
-                <div className="result-section">
+            {result.length > 0 && (<>
                     <h3>Natijalar:</h3>
-                    {result.map((item, index) => (
+                <div className="result-section">
+                    {result.sort((a,b)=>a.simptomlar.length-b.simptomlar.length).map((item, index) => (
                         <div key={index} className="result-item">
-                            <p>
-                                <strong>Kasallik:</strong> {item.kasallik}
-                            </p>
+                              <span className="result-percentage">%{Math.round(selectedSymptoms.length *100 / item.simptomlar.length)}</span>
                             {item.image && (
                                 <img
                                     src={item.image}
@@ -176,9 +186,16 @@ const Home = () => {
                                     className="result-image"
                                 />
                             )}
+                            <div className="result-content">
+                                <p>
+                                    <strong>Kasallik:</strong> {item.kasallik}
+                                </p>
+                                <Link to={`card/${item.id}`} className="result-button" >Batafsil</Link>
+                            </div>
                         </div>
                     ))}
                 </div>
+                </>
             )}
         </div>
     );

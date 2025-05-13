@@ -1,0 +1,45 @@
+.disease-card {
+  max-width: 1200px;
+  margin:  auto;
+  padding: 20px;
+  border-radius: 10px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.disease-link{
+    background-color: #4CAF50;
+    padding: 10px 20px;
+    color: white;
+    border-radius: 8px;
+}
+
+.disease-title {
+  color: #2c3e50;
+  font-size: 24px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.disease-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 15px 0;
+}
+
+.disease-desc {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.5;
+}
+
+.extra-info {
+  margin-top: 15px;
+  padding-left: 15px;
+}
+
+.extra-item {
+  font-size: 16px;
+  color: #3d3b3b;
+  margin-bottom: 6px;
+}
