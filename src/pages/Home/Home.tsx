@@ -31,14 +31,23 @@ const Home: React.FC = () => {
             const allSymptoms = [
                 ...new Set(filtered.flatMap((d) => d.simptomlar)),
             ];
-
-            setAvailableSymptoms(allSymptoms);
+          
+        setAvailableSymptoms(allSymptoms);
             setSelectedSymptoms([]);
             setResult([]);
         }
     }, [jins, yoshOraligi]);
 
-    const toggleSymptom = (symptom: string) => {
+        const toggleSymptom =async (symptom: string) => {
+             const filtered = (data as KasallikItem[])
+                .filter((item) => item.jins.includes(jins))
+                .filter((item) => item.yoshOraligi.includes(yoshOraligi))
+                console.log(filtered)
+                  const allSymptoms = [
+                ...new Set(filtered.filter((d) => d.simptomlar.includes(symptom)).flatMap((d)=>d.simptomlar)),
+            ];
+            setAvailableSymptoms(allSymptoms)
+               
         setSelectedSymptoms((prev) =>
             prev.includes(symptom)
                 ? prev.filter((s) => s !== symptom)
@@ -46,11 +55,19 @@ const Home: React.FC = () => {
         );
     };
 
+    //   const toggleSymptom = (symptom: string) => {
+    //     setSelectedSymptoms((prev) =>
+    //         prev.includes(symptom)
+    //             ? prev.filter((s) => s !== symptom)
+    //             : [...prev, symptom]
+    //     );
+    // };
+
     const handleDiagnosis = () => {
         const filtered = (data as KasallikItem[]).filter(
             (item) =>
                 item.jins.includes(jins) &&
-                item.yoshOraligi.includes(yoshOraligi)
+                item.yoshOraligi.includes(yoshOraligi) 
         );
 
         let matched: KasallikItem[] = [];
@@ -178,7 +195,7 @@ const Home: React.FC = () => {
                 <div className="result-section">
                     {result.sort((a,b)=>a.simptomlar.length-b.simptomlar.length).map((item, index) => (
                         <div key={index} className="result-item">
-                              <span className="result-percentage">%{Math.round(selectedSymptoms.length *100 / item.simptomlar.length)}</span>
+                              <span className="result-percentage">{Math.round(selectedSymptoms.length *100 / item.simptomlar.length)}%</span>
                             {item.image && (
                                 <img
                                     src={item.image}
