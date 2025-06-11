@@ -42,7 +42,6 @@ const Home: React.FC = () => {
              const filtered = (data as KasallikItem[])
                 .filter((item) => item.jins.includes(jins))
                 .filter((item) => item.yoshOraligi.includes(yoshOraligi))
-                console.log(filtered)
                   const allSymptoms = [
                 ...new Set(filtered.filter((d) => d.simptomlar.includes(symptom)).flatMap((d)=>d.simptomlar)),
             ];
@@ -76,7 +75,14 @@ const Home: React.FC = () => {
             matched = filtered.filter((item) =>
                 item.simptomlar.includes(selectedSymptoms[0])
             );
-        } else if (selectedSymptoms.length >= 2) {
+            console.log(matched,'1')
+        } else  {
+            console.log(selectedSymptoms)
+            for(let item of selectedSymptoms){
+                matched=filtered.filter((i) =>
+                i.simptomlar.includes(item)
+            );
+            }
             matched = filtered.filter((item) => {
                 const matchCount = selectedSymptoms.filter((s) =>
                     item.simptomlar.includes(s)
